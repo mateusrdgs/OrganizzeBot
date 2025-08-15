@@ -14,8 +14,8 @@ file_extension = ".csv"
 unlabelled_file = os.getenv("UNLABELLED_CSV", "") + file_extension
 labelled_file = os.getenv("LABELLED_CSV", "") + file_extension
 
-df_unlabeled_path = os.path.join("./Private", unlabelled_file)
-df_labeled_path = os.path.join("./Private", labelled_file)
+df_unlabeled_path = os.path.join("..", "./Private", unlabelled_file)
+df_labeled_path = os.path.join("..", "./Private", labelled_file)
 
 # 2. Load CSVs
 df_unlabeled = pd.read_csv(df_unlabeled_path)
@@ -71,7 +71,7 @@ def predict_expense_category(name, model, vectorizer, lookup_dict, threshold=0.7
         return "Other", proba
 
 # 11. Predict on unlabeled data using the new function
-confidence_threshold = 0.7  # tune as needed
+confidence_threshold = 0.7 # tune as needed
 final_preds = []
 for name in df_unlabeled["name"]:
     cat, conf = predict_expense_category(name, model, vectorizer, expense_to_category, confidence_threshold)
@@ -80,7 +80,7 @@ for name in df_unlabeled["name"]:
 df_unlabeled["category"] = final_preds
 
 # 12. Save DataFrame as CSV
-new_file = os.getenv("UNLABELLED_CSV", "") + "-copy" + file_extension
-new_file_path = os.path.join("./Private", new_file)
+new_file = os.getenv("UNLABELLED_CSV", "") + " - labelled" + file_extension
+new_file_path = os.path.join("..", "./Private", new_file)
 
-df_unlabeled.to_csv(new_file_path, index=False)
+df_unlabeled.to_csv(new_file_path, index=False, float_format="%.2f")
