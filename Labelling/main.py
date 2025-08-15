@@ -78,6 +78,7 @@ for name in df_unlabeled["name"]:
     final_preds.append(cat)
 
 df_unlabeled["category"] = final_preds
+df_unlabeled["tags"] = os.getenv("TAGS", "")
 
 # 12. Save DataFrame as CSV
 new_file = os.getenv("UNLABELLED_CSV", "") + " - labelled" + file_extension

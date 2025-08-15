@@ -35,9 +35,25 @@ namespace Bot
               try
               {
                 DateOnly date = DateOnly.Parse(values[0], brCultureInfo);
-                decimal amount = decimal.Parse(values[2], brCultureInfo) / 100;
+                string dateAsString = date.ToString();
+                string expenseName = values[1];
 
-                expenses.Add(new Expense(date.ToString(), values[1], amount.ToString("N2", brCultureInfo), values[3], values.Skip(4).ToArray(), cardName));
+                decimal amount = decimal.Parse(values[2], brCultureInfo) / 100;
+                string amountAsString = amount.ToString("N2", brCultureInfo);
+
+                string category = values[3];
+                string[] tags = values[4].Split(";").ToArray();
+
+                var expense = new Expense(
+                  dateAsString,
+                  expenseName,
+                  amountAsString,
+                  category,
+                  tags,
+                  cardName
+                );
+
+                expenses.Add(expense);
               }
               catch (Exception ex)
               {
@@ -48,7 +64,6 @@ namespace Bot
         }
 
         OrganizzeBot organizzeBot = new OrganizzeBot();
-
         await organizzeBot.Start(expenses);
       }
     }
