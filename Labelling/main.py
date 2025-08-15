@@ -84,4 +84,4 @@ df_unlabeled["tags"] = os.getenv("TAGS", "")
 new_file = os.getenv("UNLABELLED_CSV", "") + " - labelled" + file_extension
 new_file_path = os.path.join("..", "./Private", new_file)
 
-df_unlabeled.to_csv(new_file_path, index=False, float_format="%.2f")
+df_unlabeled.to_csv(new_file_path, index=False, float_format="%.2f", header=False)
