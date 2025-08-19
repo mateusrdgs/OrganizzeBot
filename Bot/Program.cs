@@ -22,7 +22,7 @@ namespace Bot
         List<Expense> expenses = new List<Expense>();
         string currentDirectory = Directory.GetParent("./")?.ToString()!;
 
-        using (var reader = new StreamReader(string.Concat(Directory.GetParent(currentDirectory), "/Private/", expensesFileName)))
+        using (var reader = new StreamReader(string.Concat(currentDirectory, "/Private/", expensesFileName)))
         {
           while (!reader.EndOfStream)
           {
