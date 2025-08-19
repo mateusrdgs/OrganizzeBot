@@ -34,23 +34,20 @@ namespace Bot
 
               try
               {
-                DateOnly date = DateOnly.Parse(values[0], brCultureInfo);
-                string dateAsString = date.ToString();
-                string expenseName = values[1];
-
-                decimal amount = decimal.Parse(values[2], brCultureInfo) / 100;
-                string amountAsString = amount.ToString("N2", brCultureInfo);
-
+                string date = values[0];
+                string name = values[1];
+                string amount = values[2];
                 string category = values[3];
-                string[] tags = values[4].Split(";").ToArray();
+                string tags = values[4];
 
                 var expense = new Expense(
-                  dateAsString,
-                  expenseName,
-                  amountAsString,
+                  date,
+                  name,
+                  amount,
                   category,
                   tags,
-                  cardName
+                  cardName,
+                  brCultureInfo
                 );
 
                 expenses.Add(expense);
