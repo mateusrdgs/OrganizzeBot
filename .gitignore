@@ -1,2 +1,5 @@
 # Private folder
 Private/
+
+# env file
+.env
