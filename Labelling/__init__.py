@@ -1,10 +1,10 @@
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 import pandas as pd
 import os
 
 def init():
   # Load .env variables
-  load_dotenv(find_dotenv())
+  load_dotenv()
 
   load_dotenv()
 
