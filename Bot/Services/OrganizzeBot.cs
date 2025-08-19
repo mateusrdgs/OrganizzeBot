@@ -51,28 +51,45 @@ namespace Bot
 
     async Task CreateExpense(IPage page, Expense expense)
     {
-      var modal = page.GetByLabel("Nova despesa");
 
-      await page.GetByLabel("Descrição").FillAsync(expense.Name);
-      await page.GetByLabel("Valor").FillAsync(expense.Amount);
-      await page.GetByLabel("Data").FillAsync(expense.Date);
-      await page.GetByText("Conta/Cartão").ClickAsync();
-      await page.GetByLabel("Nova despesa").GetByText(expense.CardName).First.ClickAsync();
-      await page.GetByLabel("Categoria").ClickAsync();
-      await page.GetByLabel("Nova despesa").GetByText(expense.Category).ClickAsync();
-      await modal.Locator("span").Filter(new() { HasText = "Tags" }).Locator("xpath=..").ClickAsync();
-
-      foreach (var tag in expense.Tags)
+      try
       {
-        await page.GetByLabel("Tags").ClickAsync();
-        await modal.Locator(".option").GetByText(tag, new() { Exact = true }).ClickAsync();
+        var modal = page.GetByLabel("Nova despesa");
+
+        await page.GetByLabel("Descrição").FillAsync(expense.Name);
+        await page.GetByLabel("Valor").FillAsync(expense.Amount);
+        await page.GetByLabel("Data").FillAsync(expense.Date);
+        await page.GetByText("Conta/Cartão").ClickAsync();
+        await page.GetByLabel("Nova despesa").GetByText(expense.CardName).First.ClickAsync();
+        await page.GetByLabel("Categoria").ClickAsync();
+        await page.GetByLabel("Nova despesa").GetByText(expense.Category).ClickAsync();
+
+        if (expense.Installments > 1)
+        {
+          await modal.Locator("span").Filter(new() { HasText = "Repetir" }).Locator("xpath=..").ClickAsync();
+          await modal.Locator("span").Filter(new() { HasText = "é um lançamento parcelado em" }).Locator("xpath=..").ClickAsync();
+          await page.Locator(".item[data-value='2']").ClickAsync();
+          await page.Locator($"[data-selectable][data-value='{expense.Installments}']").ClickAsync();
+        }
+
+        await modal.Locator("span").Filter(new() { HasText = "Tags" }).Locator("xpath=..").ClickAsync();
+
+        foreach (var tag in expense.Tags)
+        {
+          await page.GetByLabel("Tags").ClickAsync();
+          await modal.Locator(".option").GetByText(tag, new() { Exact = true }).ClickAsync();
+        }
+
+        await modal.ClickAsync();
+
+        await modal.GetByRole(AriaRole.Button).Last.ClickAsync();
+
+        await page.GetByText("carregando").IsHiddenAsync();
       }
-
-      await modal.ClickAsync();
-
-      await modal.GetByRole(AriaRole.Button).Last.ClickAsync();
-
-      await page.GetByText("carregando").IsHiddenAsync();
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
+      }
     }
   }
 }
