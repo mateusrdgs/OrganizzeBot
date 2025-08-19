@@ -4,6 +4,8 @@ ifneq (,$(wildcard ./.env))
 endif
 
 categorize:
-	python3 ./Labelling/__main__.py
+	\
+	source ./Labelling/env/bin/activate; \
+	python3 ./Labelling/__main__.py;
 bot: categorize
 	dotnet run --project Bot
