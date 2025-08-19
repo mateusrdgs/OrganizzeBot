@@ -21,9 +21,6 @@ df_labeled_path = os.path.join("..", "./Private", labelled_file)
 df_unlabeled = pd.read_csv(df_unlabeled_path)
 df_labeled = pd.read_csv(df_labeled_path)
 
-# Filter out installments other than the first one
-df_unlabeled = df_unlabeled[(~df_unlabeled["name"].str.contains(r"- Parcela \b(?!1\b)\d+\b\/\d"))]
-
 # Prepare training data
 X = df_labeled["name"]
 y = df_labeled["category"]
@@ -50,8 +47,8 @@ def clean_transaction_name(name: str) -> str:
     name = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode("utf-8", "ignore")
 
     # Remove "Installments" from sentence
-    name = re.sub(r" - Parcela \d\/\d", "", name)
-    name = re.sub(r" \d\/\d", "", name)
+    name = re.sub(r" - Parcela \d\/\d+", "", name)
+    name = re.sub(r" \d\/\d+", "", name)
 
     return name
 
@@ -70,6 +67,19 @@ def predict_expense_category(name, model, vectorizer, lookup_dict, threshold=0.7
         return pred, proba
     else:
         return "Other", proba
+
+# Filter out installments other than the first one
+df_unlabeled = df_unlabeled[(~df_unlabeled["name"].str.contains(r"- Parcela \b(?!1\b)\d+\b\/\d"))]
+
+# Update amounts for the remaining expenses with installments
+def multiply_amount(name, amount):
+    if (re.search(r" - Parcela \d\/\d+", name)):
+        installment = int(re.sub(r".* - Parcela \d\/", "", name))
+        return installment * amount
+
+    return amount
+
+df_unlabeled['amount'] = df_unlabeled.apply(lambda row: multiply_amount(row["name"], row.amount), axis=1)
 
 # Clean up expenses names to see if their name match with an existing one in the dictionary
 unlabeled_expenses_names = df_unlabeled["name"].astype(str).apply(clean_transaction_name)
