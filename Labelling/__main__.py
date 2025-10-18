@@ -1,10 +1,10 @@
 import os
-from __init__ import init
 from predict import predict
-from postprocess import postprocess
+from utils.text_cleaner import postprocess
+from utils.data_loader import load_datasets
 
 def main():
-    UNLABELLED_DF, LABELLED_DF = init()
+    UNLABELLED_DF, LABELLED_DF = load_datasets()
 
     # Predict expenses categories
     UNLABELLED_DF = predict(UNLABELLED_DF, LABELLED_DF)
