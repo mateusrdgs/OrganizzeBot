@@ -1,13 +1,16 @@
 import os
 from predict import predict
+from model import train
 from utils.text_cleaner import postprocess
 from utils.data_loader import load_datasets
 
 def main():
     unlabelled_df, labelled_df = load_datasets()
 
+    train(labelled_df)
+
     # Predict expenses categories
-    unlabelled_df = predict(unlabelled_df, labelled_df)
+    unlabelled_df = predict(unlabelled_df)
 
     # Postprocess DataFrame
     unlabelled_df = postprocess(unlabelled_df)
