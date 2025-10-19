@@ -1,5 +1,5 @@
-from model import load
-from utils.text_cleaner import clean_transaction_name
+from .....app.api.model.services.train import load
+from .....app.api.utils.text_cleaner import clean_transaction_name
 
 # Define prediction function with exact match fallback
 def predict_expense_category(name, model, vectorizer, lookup_dict, threshold):

@@ -13,8 +13,7 @@ def load_datasets():
   unlabelled_df_path = os.path.join("./Private", unlabelled_file)
   labelled_df_path = os.path.join("./Private", labelled_file)
 
-  # Load CSVs
   unlabelled_df = pd.read_csv(unlabelled_df_path)
   labelled_df = pd.read_csv(labelled_df_path)
 
-  return unlabelled_df, labelled_df
+  return labelled_df, unlabelled_df

@@ -1,11 +1,12 @@
+import os
+import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from utils.text_cleaner import clean_transaction_name
-import os
-import joblib
 
-def train(labelled_df):
+from .....app.api.utils.text_cleaner import clean_transaction_name
+
+def call(labelled_df):
     # Prepare training data
     X = labelled_df["name"]
     y = labelled_df["category"]
