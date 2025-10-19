@@ -1,5 +1,5 @@
-from .....app.api.model.services.train import load
-from .....app.api.utils.text_cleaner import clean_transaction_name
+from ...utils.text_cleaner import clean_transaction_name
+from ...utils.data_loader import load_dumps
 
 # Define prediction function with exact match fallback
 def predict_expense_category(name, model, vectorizer, lookup_dict, threshold):
@@ -16,7 +16,7 @@ def predict_expense_category(name, model, vectorizer, lookup_dict, threshold):
         return "Other", proba
 
 def predict(unlabelled_df):
-    model, vectorizer, lookup_dict = load()
+    model, vectorizer, lookup_dict = load_dumps()
 
     # Clean up expenses names to see if their name match with an existing one in the dictionary
     unlabeled_expenses_names = unlabelled_df["title"].astype(str).apply(clean_transaction_name)

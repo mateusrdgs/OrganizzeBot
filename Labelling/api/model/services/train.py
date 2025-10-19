@@ -4,7 +4,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 
-from .....app.api.utils.text_cleaner import clean_transaction_name
+from ...utils.text_cleaner import clean_transaction_name
 
 def call(labelled_df):
     # Prepare training data
@@ -39,10 +39,3 @@ def call(labelled_df):
     joblib.dump(model, './Labelling/models/model.pkl')
     joblib.dump(vectorizer, './Labelling/models/vectorizer.pkl')
     joblib.dump(lookup_dict, './Labelling/models/lookup_dict.pkl')
-
-def load():
-    model = joblib.load('./Labelling/models/model.pkl')
-    vectorizer = joblib.load('./Labelling/models/vectorizer.pkl')
-    lookup_dict = joblib.load('./Labelling/models/lookup_dict.pkl')
-
-    return model, vectorizer, lookup_dict

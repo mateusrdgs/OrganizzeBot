@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import pandas as pd
 import os
+import joblib
 
 def load_datasets():
   # Load .env variables
@@ -17,3 +18,10 @@ def load_datasets():
   labelled_df = pd.read_csv(labelled_df_path)
 
   return labelled_df, unlabelled_df
+
+def load_dumps():
+  model = joblib.load('./Labelling/models/model.pkl')
+  vectorizer = joblib.load('./Labelling/models/vectorizer.pkl')
+  lookup_dict = joblib.load('./Labelling/models/lookup_dict.pkl')
+
+  return model, vectorizer, lookup_dict
