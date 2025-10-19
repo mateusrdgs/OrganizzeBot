@@ -31,15 +31,15 @@ def update_name_expenses_with_installments(name):
 def postprocess(unlabelled_df):
   EXCLUSION_LIST = set(os.getenv("EXCLUSION_LIST", "").split(";"))
 
-  unlabelled_df['amount'] = unlabelled_df.apply(lambda row: multiply_amount(row["name"], row.amount), axis=1)
+  unlabelled_df["amount"] = unlabelled_df.apply(lambda row: multiply_amount(row["title"], row.amount), axis=1)
 
-  unlabelled_df['name'] = unlabelled_df.apply(lambda row: update_name_expenses_with_installments(row["name"]), axis=1)
+  unlabelled_df["title"] = unlabelled_df.apply(lambda row: update_name_expenses_with_installments(row["title"]), axis=1)
 
   # Filter out installments other than the first one
-  unlabelled_df = unlabelled_df[(~unlabelled_df["name"].str.contains(r"- Parcela \b(?!1\b)\d+\b\/\d"))]
+  unlabelled_df = unlabelled_df[(~unlabelled_df["title"].str.contains(r"- Parcela \b(?!1\b)\d+\b\/\d"))]
 
   # Filter out expenses in exclusion list
-  unlabelled_df = unlabelled_df[unlabelled_df["name"].apply(lambda x: x not in EXCLUSION_LIST)]
+  unlabelled_df = unlabelled_df[unlabelled_df["title"].apply(lambda x: x not in EXCLUSION_LIST)]
 
   # Apply tags
   unlabelled_df["tags"] = os.getenv("TAGS", "")

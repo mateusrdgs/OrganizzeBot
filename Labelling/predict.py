@@ -21,7 +21,7 @@ def predict(unlabelled_df, labelled_df):
     lookup_dict = build(labelled_df)
 
     # Clean up expenses names to see if their name match with an existing one in the dictionary
-    unlabeled_expenses_names = unlabelled_df["name"].astype(str).apply(clean_transaction_name)
+    unlabeled_expenses_names = unlabelled_df["title"].astype(str).apply(clean_transaction_name)
 
     confidence_threshold = 0.7 # tune as needed
     final_preds = []
