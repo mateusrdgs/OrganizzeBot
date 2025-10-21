@@ -15,7 +15,7 @@ def predict_expense_category(name, model, vectorizer, lookup_dict, threshold):
     else:
         return "Other", proba
 
-def predict(unlabelled_df):
+def call(unlabelled_df):
     model, vectorizer, lookup_dict = load_dumps()
 
     # Clean up expenses names to see if their name match with an existing one in the dictionary
