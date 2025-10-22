@@ -1,13 +1,14 @@
+import os
+import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from utils.text_cleaner import clean_transaction_name
-import os
-import joblib
 
-def train(labelled_df):
+from Labelling.api.utils.text_cleaner import clean_transaction_name
+
+def call(labelled_df):
     # Prepare training data
-    X = labelled_df["name"]
+    X = labelled_df["title"]
     y = labelled_df["category"]
 
     # Group rare categories into 'Other'
@@ -31,17 +32,10 @@ def train(labelled_df):
     categories = labelled_df["category"]
 
     # Build exact match lookup dictionary from labeled data
-    labelled_df["name"] = labelled_df["name"].astype(str).apply(clean_transaction_name) # Cleanup names from the labeled dataframe
-    lookup_dict = dict(zip(labelled_df["name"], categories))
+    labelled_df["title"] = labelled_df["title"].astype(str).apply(clean_transaction_name) # Cleanup names from the labeled dataframe
+    lookup_dict = dict(zip(labelled_df["title"], categories))
 
     os.makedirs("./Labelling/models", exist_ok=True)
     joblib.dump(model, './Labelling/models/model.pkl')
     joblib.dump(vectorizer, './Labelling/models/vectorizer.pkl')
     joblib.dump(lookup_dict, './Labelling/models/lookup_dict.pkl')
-
-def load():
-    model = joblib.load('./Labelling/models/model.pkl')
-    vectorizer = joblib.load('./Labelling/models/vectorizer.pkl')
-    lookup_dict = joblib.load('./Labelling/models/lookup_dict.pkl')
-
-    return model, vectorizer, lookup_dict
