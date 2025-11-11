@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   Post,
   UploadedFile,
@@ -6,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { LabellingService } from 'src/labelling/labelling.service';
+import { LabellingService } from './labelling.service';
 
 @Controller('labelling')
 export class LabellingController {
@@ -14,12 +15,17 @@ export class LabellingController {
   @Post('')
   @UseInterceptors(FileInterceptor('file'))
   async labelling(@UploadedFile() file: Express.Multer.File) {
-    const [error, expenses] = await this.labellingService.processExpenses(file);
+    if (file) {
+      const [error, expenses] =
+        await this.labellingService.processExpenses(file);
 
-    if (error) {
-      return error;
+      if (error) {
+        throw error;
+      }
+
+      return expenses;
     }
 
-    return expenses;
+    throw new BadRequestException();
   }
 }
