@@ -13,7 +13,13 @@ export class LabellingController {
   constructor(private labellingService: LabellingService) {}
   @Post('')
   @UseInterceptors(FileInterceptor('file'))
-  index(@UploadedFile() file: Express.Multer.File) {
-    this.labellingService.validateExpensesFile(file);
+  async labelling(@UploadedFile() file: Express.Multer.File) {
+    const [error, expenses] = await this.labellingService.processExpenses(file);
+
+    if (error) {
+      return error;
+    }
+
+    return expenses;
   }
 }

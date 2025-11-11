@@ -1,22 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import csv from 'csv-parse';
+import csv, { CsvError } from 'csv-parse';
 
 import { ExpenseDTO } from 'src/labelling/labelling.dtos';
 
 @Injectable()
 export class LabellingService {
-  async validateExpensesFile(file: Express.Multer.File) {
+  async processExpenses(
+    file: Express.Multer.File,
+  ): Promise<[null, ExpenseDTO[]] | [Error, null]> {
     try {
-      await this.parseCSVFile(file);
-    } catch (ex: csv.CsvError) {
-      return ex;
+      const expenses = await this.parseCSVFile(file);
+      return [null, expenses];
+    } catch (ex: unknown) {
+      return [ex as CsvError, null];
     }
   }
 
   private parseCSVFile(file: Express.Multer.File) {
     return new Promise<ExpenseDTO[]>((resolve, reject) => {
       csv.parse(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
         file.buffer,
         {
           columns: true,
