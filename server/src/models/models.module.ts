@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ModelsService } from './models.service';
 import { HttpModule } from '@nestjs/axios';
+import { ModelsController } from 'src/models/models.controller';
 
 @Module({
   imports: [
@@ -8,6 +9,7 @@ import { HttpModule } from '@nestjs/axios';
       baseURL: 'http://localhost:8000',
     }),
   ],
+  controllers: [ModelsController],
   providers: [ModelsService],
   exports: [ModelsService],
 })

@@ -27,7 +27,7 @@ export class Csv {
   static validateRows<T extends object>(rows: T[]) {
     const validRows: T[] = [];
     const errors: string[] = [];
-    let index = 1;
+    let index = 2;
 
     return new Promise<T[]>((resolve, reject) => {
       for (const row of rows) {
@@ -42,11 +42,10 @@ export class Csv {
               )
               .join(', ');
 
-          index += 1;
-
           errors.push(errorMessage);
         }
 
+        index += 1;
         validRows.push(row);
       }
 

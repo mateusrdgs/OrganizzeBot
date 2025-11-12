@@ -22,3 +22,30 @@ export class PredictExpenseDTO {
     this.amount = amount;
   }
 }
+
+export class ExpensesForTrainingDTO {
+  @IsNotEmpty()
+  @IsString()
+  date: string;
+
+  @IsNotEmpty()
+  @IsString()
+  title: string;
+
+  // @IsNumber()
+  // @Transform(({ value }: { value: number }) => value.toFixed(2), {
+  //   toPlainOnly: true,
+  // })
+  amount: number;
+
+  @IsString()
+  @IsNotEmpty()
+  category: string;
+
+  constructor(date: string, title: string, amount: number, category: string) {
+    this.date = date;
+    this.title = title;
+    this.amount = amount;
+    this.category = category;
+  }
+}
