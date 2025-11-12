@@ -26,17 +26,21 @@ export class ModelsService {
     expenses: PredictExpenseDTO[],
   ): Promise<[null, Expense[]] | [Error, null]> {
     try {
+      this.logger.log('Calling endpoint for prediction');
+
       const { data } = await firstValueFrom(
         this.httpService.post<Expense[]>('/model/predict', expenses).pipe(
-          catchError(() => {
+          catchError((error: AxiosError) => {
+            this.logger.error(error.message);
+
             throw new InternalServerErrorException();
           }),
         ),
       );
 
       return [null, data];
-    } catch {
-      return [new Error(), null];
+    } catch (ex: unknown) {
+      return [ex as HttpException, null];
     }
   }
 
@@ -66,7 +70,7 @@ export class ModelsService {
 
       return [null, rows];
     } catch (ex: unknown) {
-      this.logger.log('Error parsing CSV file');
+      this.logger.log('Error parsing CSV file', ex);
 
       return [ex as CsvError | HttpException, null];
     }
@@ -104,8 +108,6 @@ export class ModelsService {
     const [parseError, expenses] = await this.parseExpenses(file);
 
     if (parseError) {
-      this.logger.error(parseError.message, parseError.stack);
-
       return [parseError, null];
     }
 
