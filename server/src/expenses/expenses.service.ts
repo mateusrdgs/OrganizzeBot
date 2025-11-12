@@ -2,10 +2,10 @@ import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { validateSync } from 'class-validator';
 import csv, { CsvError } from 'csv-parse';
 
-import { ExpenseDTO } from 'src/labelling/labelling.dto';
+import { ExpenseDTO } from 'src/expenses/expenses.dto';
 
 @Injectable()
-export class LabellingService {
+export class ExpensesService {
   async parseExpenses(
     file: Express.Multer.File,
   ): Promise<[null, ExpenseDTO[]] | [Error, null]> {

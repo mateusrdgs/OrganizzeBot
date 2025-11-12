@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LabellingController } from './labelling.controller';
-import { LabellingService } from './labelling.service';
+import { ExpensesController } from './expenses.controller';
+import { ExpensesService } from './expenses.service';
 import * as fs from 'fs';
 
 const mockFile = {
@@ -15,16 +15,16 @@ const mockFile = {
   size: 51828,
 } as Express.Multer.File;
 
-describe('LabellingController', () => {
-  let controller: LabellingController;
+describe('ExpensesController', () => {
+  let controller: ExpensesController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [LabellingController],
-      providers: [LabellingService],
+      controllers: [ExpensesController],
+      providers: [ExpensesService],
     }).compile();
 
-    controller = module.get<LabellingController>(LabellingController);
+    controller = module.get<ExpensesController>(ExpensesController);
   });
 
   it('should be defined', () => {
@@ -32,7 +32,7 @@ describe('LabellingController', () => {
   });
 
   it('should return the correct response', async () => {
-    expect(await controller.labelling(mockFile)).toEqual([
+    expect(await controller.parseExpenses(mockFile)).toEqual([
       { date: '2025-09-08', title: 'Expense 1', amount: 88.33 },
       { date: '2025-09-08', title: 'Expense 2', amount: 45.57 },
       { date: '2025-09-08', title: 'Expense 3', amount: 12.91 },

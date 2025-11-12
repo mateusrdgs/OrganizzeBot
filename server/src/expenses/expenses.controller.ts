@@ -12,12 +12,12 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { LabellingService } from './labelling.service';
+import { ExpensesService } from './expenses.service';
 
-@Controller('labelling')
-export class LabellingController {
-  constructor(private labellingService: LabellingService) {}
-  @Post('')
+@Controller('expenses')
+export class ExpensesController {
+  constructor(private ExpensesService: ExpensesService) {}
+  @Post('parse')
   @HttpCode(200)
   @UseInterceptors(ClassSerializerInterceptor, FileInterceptor('file'))
   async parseExpenses(
@@ -35,7 +35,7 @@ export class LabellingController {
     file: Express.Multer.File,
   ) {
     if (file) {
-      const [error, expenses] = await this.labellingService.parseExpenses(file);
+      const [error, expenses] = await this.ExpensesService.parseExpenses(file);
 
       if (error) {
         throw error;

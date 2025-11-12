@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LabellingService } from './labelling.service';
+import { ExpensesService } from './expenses.service';
 import * as fs from 'fs';
 
 const mockFile = {
@@ -14,15 +14,15 @@ const mockFile = {
   size: 51828,
 } as Express.Multer.File;
 
-describe('LabellingService', () => {
-  let service: LabellingService;
+describe('ExpensesService', () => {
+  let service: ExpensesService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [LabellingService],
+      providers: [ExpensesService],
     }).compile();
 
-    service = module.get<LabellingService>(LabellingService);
+    service = module.get<ExpensesService>(ExpensesService);
   });
 
   it('should be defined', () => {
@@ -30,7 +30,7 @@ describe('LabellingService', () => {
   });
 
   it('should return the correct response', async () => {
-    expect(await service.processExpenses(mockFile)).toEqual([
+    expect(await service.parseExpenses(mockFile)).toEqual([
       null,
       [
         { date: '2025-09-08', title: 'Expense 1', amount: 88.33 },
