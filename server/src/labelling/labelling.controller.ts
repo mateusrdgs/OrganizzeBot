@@ -4,6 +4,7 @@ import {
   Post,
   UploadedFile,
   UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -13,11 +14,10 @@ import { LabellingService } from './labelling.service';
 export class LabellingController {
   constructor(private labellingService: LabellingService) {}
   @Post('')
-  @UseInterceptors(FileInterceptor('file'))
-  async labelling(@UploadedFile() file: Express.Multer.File) {
+  @UseInterceptors(ClassSerializerInterceptor, FileInterceptor('file'))
+  async parseExpenses(@UploadedFile() file: Express.Multer.File) {
     if (file) {
-      const [error, expenses] =
-        await this.labellingService.processExpenses(file);
+      const [error, expenses] = await this.labellingService.parseExpenses(file);
 
       if (error) {
         throw error;

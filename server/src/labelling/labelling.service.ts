@@ -1,18 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
+import { validateSync } from 'class-validator';
 import csv, { CsvError } from 'csv-parse';
 
-import { ExpenseDTO } from 'src/labelling/labelling.dtos';
+import { ExpenseDTO } from 'src/labelling/labelling.dto';
 
 @Injectable()
 export class LabellingService {
-  async processExpenses(
+  async parseExpenses(
     file: Express.Multer.File,
   ): Promise<[null, ExpenseDTO[]] | [Error, null]> {
     try {
       const expenses = await this.parseCSVFile(file);
       return [null, expenses];
     } catch (ex: unknown) {
-      return [ex as CsvError, null];
+      return [ex as CsvError | HttpException, null];
     }
   }
 
@@ -31,7 +32,37 @@ export class LabellingService {
             reject(err);
           }
 
-          resolve(records);
+          const expenses: ExpenseDTO[] = [];
+          const errors: string[] = [];
+          let index = 1;
+
+          for (const row of records) {
+            const expense = new ExpenseDTO(row.date, row.title, row.amount);
+            const validationErrors = validateSync(expense);
+
+            if (validationErrors.length > 0) {
+              const errorMessage =
+                index +
+                ' - ' +
+                validationErrors
+                  .map((validationError) =>
+                    Object.values(validationError.constraints!).join(', '),
+                  )
+                  .join(', ');
+
+              index += 1;
+
+              errors.push(errorMessage);
+            }
+
+            expenses.push(expense);
+          }
+
+          if (errors.length > 0) {
+            reject(new BadRequestException(errors));
+          }
+
+          resolve(expenses);
         },
       );
     });
