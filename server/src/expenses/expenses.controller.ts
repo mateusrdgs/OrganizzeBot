@@ -40,20 +40,14 @@ export class ExpensesController {
     file: Express.Multer.File,
   ) {
     if (file) {
-      const [error, expenses] = await this.expensesService.parseExpenses(file);
+      const [error, expenses] =
+        await this.expensesService.predictExpenses(file);
 
       if (error) {
         throw error;
       }
 
-      const [predictionError, prediction] =
-        await this.modelsService.predict(expenses);
-
-      if (predictionError) {
-        throw predictionError;
-      }
-
-      return prediction;
+      return expenses;
     }
 
     throw new BadRequestException();
