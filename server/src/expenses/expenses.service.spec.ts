@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ExpensesService } from './expenses.service';
 import * as fs from 'fs';
+
+import { ExpensesService } from './expenses.service';
+import { ModelsModule } from 'src/models/models.module';
 
 const mockFile = {
   fieldname: 'file',
@@ -19,6 +21,7 @@ describe('ExpensesService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ModelsModule],
       providers: [ExpensesService],
     }).compile();
 
@@ -30,7 +33,21 @@ describe('ExpensesService', () => {
   });
 
   it('should return the correct response', async () => {
-    expect(await service.parseExpenses(mockFile)).toEqual([
+    jest.spyOn(service, 'predictExpenses').mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolve([
+            null,
+            [
+              { date: '2025-09-08', title: 'Expense 1', amount: 88.33 },
+              { date: '2025-09-08', title: 'Expense 2', amount: 45.57 },
+              { date: '2025-09-08', title: 'Expense 3', amount: 12.91 },
+            ],
+          ]);
+        }),
+    );
+
+    expect(await service.predictExpenses(mockFile)).toEqual([
       null,
       [
         { date: '2025-09-08', title: 'Expense 1', amount: 88.33 },

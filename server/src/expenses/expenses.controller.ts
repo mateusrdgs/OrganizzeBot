@@ -25,7 +25,7 @@ export class ExpensesController {
   @Post('predict')
   @HttpCode(200)
   @UseInterceptors(ClassSerializerInterceptor, FileInterceptor('file'))
-  async parseExpenses(
+  async predict(
     @UploadedFile(
       new ParseFilePipe({
         validators: [
