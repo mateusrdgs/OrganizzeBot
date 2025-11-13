@@ -13,14 +13,10 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { ExpensesService } from './expenses.service';
-import { ModelsService } from 'src/models/models.service';
 
 @Controller('expenses')
 export class ExpensesController {
-  constructor(
-    private expensesService: ExpensesService,
-    private modelsService: ModelsService,
-  ) {}
+  constructor(private expensesService: ExpensesService) {}
 
   @Post('predict')
   @HttpCode(200)
